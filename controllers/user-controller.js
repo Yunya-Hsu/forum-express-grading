@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 
-const { User, Restaurant, Comment, Favorite, Like, Followship } = require('../models')
+const { User, Restaurant, Comment, Favorite, Like, Followship, Sequelize } = require('../models')
 
 const { imgurFileHandler } = require('../helpers/file-helpers')
 
@@ -42,22 +42,31 @@ const userController = {
   },
   getUser: (req, res, next) => {
     return Promise.all([
-      User.findByPk(req.params.id, { raw: true }),
-      Comment.count({
-        where: { userId: req.params.id }
+      User.findByPk(req.params.id, {
+        attributes: ['id', 'name', 'avatar', 'email'],
+        include: [
+          { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['id', 'image'] },
+          { model: User, as: 'Followers', attributes: ['id', 'avatar'] }, // 撈出追蹤這個user的人
+          { model: User, as: 'Followings', attributes: ['id', 'avatar'] } // 撈出這user追蹤的人
+        ]
       }),
       Comment.findAll({
+        attributes: [Sequelize.fn('DISTINCT', Sequelize.col('restaurant_id')), 'restaurantId'],
         where: { userId: req.params.id },
-        include: [Restaurant],
+        include: [{ model: Restaurant, attributes: ['image'] }],
         raw: true,
         nest: true
       })
     ])
-      .then(([user, commentNumber, comments]) => {
+      .then(([user, comments]) => {
         if (!user) throw new Error("User didn't exist!")
+
         return res.render('users/profile', {
-          user,
-          commentNumber,
+          user: user.toJSON(),
+          commentNumber: comments.length,
+          favoritedRestaurantNumber: user.FavoritedRestaurants.length,
+          followerNumber: user.Followers.length,
+          followingNumber: user.Followings.length,
           comments
         })
       })

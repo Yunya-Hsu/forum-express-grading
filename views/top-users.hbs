@@ -5,8 +5,8 @@
   {{#each users}}
     <div class="col-3">
       <a href="/users/{{this.id}}">
-        {{#if this.image}}
-          <img src="{{this.image}}" width="140px" height="140px" style="transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;" />
+        {{#if this.avatar}}
+          <img src="{{this.avatar}}" width="140px" height="140px" style="transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;" />
         {{else}}
           <img src="https://via.placeholder.com/140" width="140px" height="140px" />
         {{/if}}
