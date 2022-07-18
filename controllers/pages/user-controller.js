@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs')
 
-const { User, Restaurant, Comment, Favorite, Like, Followship, Sequelize } = require('../models')
+const { User, Restaurant, Comment, Favorite, Like, Followship, Sequelize } = require('../../models')
 
-const { imgurFileHandler } = require('../helpers/file-helpers')
+const { imgurFileHandler } = require('../../helpers/file-helpers')
 
 const userController = {
   signUpPage: (req, res) => { // 負責 render 註冊的頁面

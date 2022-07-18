@@ -1,11 +1,11 @@
 // 載入 model 寫法1：
-// const db = require('../models')
+// const db = require('../../models')
 // const Restaurant = db.Restaurant
 
 // 載入 model 寫法2：
-const { Restaurant, User, Category } = require('../models')
+const { Restaurant, User, Category } = require('../../models')
 
-const { imgurFileHandler } = require('../helpers/file-helpers')
+const { imgurFileHandler } = require('../../helpers/file-helpers')
 
 const adminController = {
   getRestaurants: (req, res, next) => {
