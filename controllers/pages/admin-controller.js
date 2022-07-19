@@ -7,15 +7,11 @@ const { Restaurant, User, Category } = require('../../models')
 
 const { imgurFileHandler } = require('../../helpers/file-helpers')
 
+const adminServices = require('../../services/admin-services')
+
 const adminController = {
   getRestaurants: (req, res, next) => {
-    Restaurant.findAll({
-      raw: true, // 用findAll在sequelize找到的是物件(實體)，所以要用raw:true 去把撈到的資料轉換成簡單的js物件
-      nest: true,
-      include: [Category]
-    })
-      .then(restaurants => res.render('admin/restaurants', { restaurants }))
-      .catch(err => next(err))
+    adminServices.getRestaurants(req, (err, data) => err ? next(err) : res.render('admin/restaurants', data))
   },
   createRestaurant: (req, res, next) => {
     return Category.findAll({ raw: true })
